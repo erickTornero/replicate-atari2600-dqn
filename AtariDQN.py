@@ -69,6 +69,7 @@ def playAtari():
 				total_reward += reward
 				if terminal:
 					print('Total Reward episode: ', total_reward)
+					total_reward = 0
 				#print(counter_actionssame)
 				#action_curidx = getActionIdx(action)
 				#if action_prev == action_curidx:
