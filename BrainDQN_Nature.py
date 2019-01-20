@@ -4,10 +4,10 @@
 # Date: 2016.3.21
 # -----------------------------
 
-import tensorflow as tf 
-import numpy as np 
+import tensorflow as tf
+import numpy as np
 import random
-from collections import deque 
+from collections import deque
 import os
 
 # parameter 4 fix problem of pause
@@ -15,7 +15,7 @@ import os
 FRAME_PER_ACTION = 1
 GAMMA = 0.95 # decay rate of past observations
 OBSERVE = 50000 # timesteps to observe before training
-EXPLORE = 400000 # frames over which to anneal epsilon
+EXPLORE = 1000000 # frames over which to anneal epsilon
 FINAL_EPSILON = 0.1#0.001 # final value of epsilon
 INITIAL_EPSILON = 1.0#0.01 # starting value of epsilon
 REPLAY_MEMORY = 400000 # number of previous transitions to remember
@@ -45,7 +45,7 @@ class BrainDQN:
 		self.saver = tf.train.Saver()
 		self.session = tf.InteractiveSession()
 		self.session.run(tf.global_variables_initializer())
-		checkpoint = tf.train.get_checkpoint_state('./saved_networks_breakout')
+		checkpoint = tf.train.get_checkpoint_state('./saved_networks')
 		if checkpoint and checkpoint.model_checkpoint_path:
 			self.saver.restore(self.session, checkpoint.model_checkpoint_path)
 			print("Successfully loaded:", checkpoint.model_checkpoint_path)
@@ -96,7 +96,7 @@ class BrainDQN:
 
 	def createTrainingMethod(self):
 		self.actionInput = tf.placeholder("float",[None,self.actions])
-		self.yInput = tf.placeholder("float", [None]) 
+		self.yInput = tf.placeholder("float", [None])
 		Q_Action = tf.reduce_sum(tf.multiply(self.QValue, self.actionInput), reduction_indices = 1)
 		self.cost = tf.reduce_mean(tf.square(self.yInput - Q_Action))
 		self.trainStep = tf.train.RMSPropOptimizer(0.00025,0.99,0.0,1e-6).minimize(self.cost)
@@ -104,7 +104,7 @@ class BrainDQN:
 
 	def trainQNetwork(self):
 
-		
+
 		# Step 1: obtain random minibatch from replay memory
 		minibatch = random.sample(self.replayMemory,BATCH_SIZE)
 		state_batch = [data[0] for data in minibatch]
@@ -112,7 +112,7 @@ class BrainDQN:
 		reward_batch = [data[2] for data in minibatch]
 		nextState_batch = [data[3] for data in minibatch]
 
-		# Step 2: calculate y 
+		# Step 2: calculate y
 		y_batch = []
 		QValue_batch = self.QValueT.eval(feed_dict={self.stateInputT:nextState_batch})
 		for i in range(0,BATCH_SIZE):
@@ -135,7 +135,7 @@ class BrainDQN:
 		if self.timeStep % UPDATE_TIME == 0:
 			self.copyTargetQNetwork()
 
-		
+
 	def setPerception(self,nextObservation,action,reward,terminal):
 		newState = np.append(nextObservation,self.currentState[:,:,1:],axis = 2)
 		self.replayMemory.append((self.currentState,action,reward,newState,terminal))
@@ -215,4 +215,3 @@ class BrainDQN:
 
 	def max_pool_2x2(self,x):
 		return tf.nn.max_pool(x, ksize = [1, 2, 2, 1], strides = [1, 2, 2, 1], padding = "SAME")
-		

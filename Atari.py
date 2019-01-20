@@ -1,5 +1,5 @@
 from ale_python_interface import ALEInterface
-import numpy as np 
+import numpy as np
 import cv2
 from random import randrange
 import os
@@ -12,7 +12,7 @@ class Atari:
 		self.ale.setInt(b"random_seed",123)
 		self.ale.setInt(b"frame_skip",4)
 
-		USE_SDL = True
+		USE_SDL = False
 		if USE_SDL:
 		  if sys.platform == 'darwin':
 		    import pygame
@@ -20,11 +20,11 @@ class Atari:
 		    self.ale.setBool(b'sound', False) # Sound doesn't work on OSX
 		  elif sys.platform.startswith('linux'):
 		    self.ale.setBool(b'sound', True)
-		self.ale.setBool(b'display_screen', True)
+		  self.ale.setBool(b'display_screen', True)
 
 		# Define direction of ROM
 		#print( 'cwd: ', os.getcwd() )
-		dirROM = os.path.join( os.getcwd(), "roms/breakout.bin" )
+		dirROM = os.path.join( os.getcwd(), "../roms/pong.bin" )
 		#print( 'dirROM: ', dirROM )
 		rom_file = str.encode(dirROM)
 		self.ale.loadROM(rom_file)
@@ -34,9 +34,9 @@ class Atari:
 		for i in range(len(self.legal_actions)):
 			self.action_map[self.legal_actions[i]] = i
 		#print len(self.legal_actions)
-		self.windowname = rom_name
-		cv2.startWindowThread()
-		cv2.namedWindow(rom_name)
+		#self.windowname = rom_name
+		#cv2.startWindowThread()
+		#cv2.namedWindow(rom_name)
 
 	def get_image(self):
 		numpy_surface = np.zeros(self.screen_height*self.screen_width*3, dtype=np.uint8)
@@ -49,11 +49,11 @@ class Atari:
 		return self.get_image()
 
 	def next(self, action):
-		reward = self.ale.act(self.legal_actions[np.argmax(action)])	
+		reward = self.ale.act(self.legal_actions[np.argmax(action)])
 		nextstate = self.get_image()
-		
-		cv2.imshow(self.windowname,nextstate)
+
+		#cv2.imshow(self.windowname,nextstate)
 		if self.ale.game_over():
 			self.newGame()
-		#print "reward %d" % reward 
+		#print "reward %d" % reward
 		return nextstate, reward, self.ale.game_over()
