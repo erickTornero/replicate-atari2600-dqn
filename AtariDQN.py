@@ -5,13 +5,20 @@ from Atari import Atari
 from BrainDQN_Nature import *
 import numpy as np 
 
-TEST = True
 
+TEST = False
+crop_above = False
 # preprocess raw image to 80*80 gray image
 def preprocess(observation):
+	
 	observation = cv2.cvtColor(cv2.resize(observation, (84, 110)), cv2.COLOR_BGR2GRAY)
-	observation = observation[26:110,:]
-	ret, observation = cv2.threshold(observation,1,255,cv2.THRESH_BINARY)
+	if crop_above:
+		observation = observation[26:110,:]
+	else:
+		observation = observation[0:84,:]
+	#ret, observation = cv2.threshold(observation,100,255,cv2.THRESH_BINARY)
+	
+	#cv2.waitKey(0)
 	return np.reshape(observation,(84,84,1))
 
 def playAtari():
@@ -28,7 +35,7 @@ def playAtari():
 	observation0, reward0, terminal = atari.next(action0)
 	observation0 = cv2.cvtColor(cv2.resize(observation0, (84, 110)), cv2.COLOR_BGR2GRAY)
 	observation0 = observation0[26:110,:]
-	ret, observation0 = cv2.threshold(observation0,1,255,cv2.THRESH_BINARY)
+	#ret, observation0 = cv2.threshold(observation0,1,255,cv2.THRESH_BINARY)
 	brain.setInitState(observation0)
 	print(atari.ale.getLegalActionSet())
 	limitsameactions = 1000
