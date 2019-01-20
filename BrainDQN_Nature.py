@@ -9,7 +9,7 @@ import numpy as np
 import random
 from collections import deque
 import os
-
+from configurations import *
 # parameter 4 fix problem of pause
 # Hyper Parameters:
 FRAME_PER_ACTION = 1
@@ -24,9 +24,10 @@ UPDATE_TIME = 10000
 
 class BrainDQN:
 
-	def __init__(self,actions):
+	def __init__(self,actions, gameprops):
 		# init replay memory
 		self.replayMemory = deque()
+		self.gameProp = gameprops
 		# init some parameters
 		self.timeStep = 0
 		self.epsilon = INITIAL_EPSILON
@@ -45,7 +46,12 @@ class BrainDQN:
 		self.saver = tf.train.Saver()
 		self.session = tf.InteractiveSession()
 		self.session.run(tf.global_variables_initializer())
-		checkpoint = tf.train.get_checkpoint_state('./saved_networks')
+		
+		if self.gameProp.isTesting:
+			checkpoint = tf.train.get_checkpoint_state('./saved_networks_' + self.gameProp.namegame)
+		else:
+			checkpoint = tf.train.get_checkpoint_state('./saved_networks')
+
 		if checkpoint and checkpoint.model_checkpoint_path:
 			self.saver.restore(self.session, checkpoint.model_checkpoint_path)
 			print("Successfully loaded:", checkpoint.model_checkpoint_path)

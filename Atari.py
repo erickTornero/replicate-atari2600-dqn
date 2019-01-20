@@ -2,17 +2,19 @@ from ale_python_interface import ALEInterface
 import numpy as np
 import cv2
 from random import randrange
+from configurations import *
 import os
 import sys
 
 class Atari:
-	def __init__(self,rom_name):
+	def __init__(self,gameProps):
+		self.gameProp = gameProps
 		self.ale = ALEInterface()
 		self.max_frames_per_episode = self.ale.getInt(b"max_num_frames_per_episode")
 		self.ale.setInt(b"random_seed",123)
 		self.ale.setInt(b"frame_skip",4)
 
-		USE_SDL = False
+		USE_SDL = gameProps.isTesting
 		if USE_SDL:
 		  if sys.platform == 'darwin':
 		    import pygame
@@ -24,7 +26,8 @@ class Atari:
 
 		# Define direction of ROM
 		#print( 'cwd: ', os.getcwd() )
-		dirROM = os.path.join( os.getcwd(), "../roms/pong.bin" )
+		dirROM = os.path.join(os.getcwd(), gameProps.rompath + gameProps.namegame+'.bin')
+		#dirROM = os.path.join( os.getcwd(), "/home/erick/Escritorio/eerr/wilbermaq/mishi/DQN-Atari-Tensorflow/roms/pong.bin" )
 		#print( 'dirROM: ', dirROM )
 		rom_file = str.encode(dirROM)
 		self.ale.loadROM(rom_file)
@@ -53,7 +56,8 @@ class Atari:
 		nextstate = self.get_image()
 
 		#cv2.imshow(self.windowname,nextstate)
-		if self.ale.game_over():
+		term = self.ale.game_over()
+		if term:
 			self.newGame()
 		#print "reward %d" % reward
-		return nextstate, reward, self.ale.game_over()
+		return nextstate, reward, term

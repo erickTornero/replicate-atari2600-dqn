@@ -1,22 +1,24 @@
 import cv2
 import sys
 sys.path.append("game/")
-from Atari import Atari
+from Atari import *
 from BrainDQN_Nature import *
+
 import numpy as np
 
 
-TEST = False
-crop_above = True
+TEST = True
+# crop_above = True
 # preprocess raw image to 80*80 gray image
-def preprocess(observation):
+def preprocess(observation, perprocessFrom, preprocessTo):
 
 	observation = cv2.cvtColor(cv2.resize(observation, (84, 110)), cv2.COLOR_BGR2GRAY)
-	if crop_above:
+	observation = observation[perprocessFrom:preprocessTo,:]
+	#if crop_above:
 		#observation = observation[26:110,:]
-		observation = observation[18:102,:]  # Just Pong configs
-	else:
-		observation = observation[0:84,:]
+	#	observation = observation[18:102,:]  # Just Pong configs
+	#else:
+	#	observation = observation[0:84,:]
 	#ret, observation = cv2.threshold(observation,100,255,cv2.THRESH_BINARY)
 
 	#cv2.waitKey(0)
@@ -25,9 +27,13 @@ def preprocess(observation):
 def playAtari():
 	# Step 1: init BrainDQN
 	# Step 2: init Flappy Bird Game
-	atari = Atari('breakout.bin')
+	gameProp = GameProperties('enduro', TEST, '/home/erick/Escritorio/eerr/wilbermaq/mishi/DQN-Atari-Tensorflow/roms/')
+	atari = Atari(gameProp)
+	preprocessFrom, preprocessTo = gameProp.GetLimits()
+	print(preprocessFrom)
+	print(preprocessTo)
 	actions = len(atari.legal_actions)
-	brain = BrainDQN(actions)
+	brain = BrainDQN(actions, gameProp)
 
 
 	# Step 3: play game
@@ -35,7 +41,7 @@ def playAtari():
 	action0 = np.array([1,0,0,0])  # do nothing
 	observation0, reward0, terminal = atari.next(action0)
 	observation0 = cv2.cvtColor(cv2.resize(observation0, (84, 110)), cv2.COLOR_BGR2GRAY)
-	observation0 = observation0[26:110,:]
+	observation0 = observation0[preprocessFrom:preprocessTo,:]
 	#ret, observation0 = cv2.threshold(observation0,1,255,cv2.THRESH_BINARY)
 	brain.setInitState(observation0)
 	print(atari.ale.getLegalActionSet())
@@ -50,7 +56,7 @@ def playAtari():
 			else:
 				action = brain.getAction()
 			nextObservation,reward,terminal = atari.next(action)
-			nextObservation = preprocess(nextObservation)
+			nextObservation = preprocess(nextObservation, preprocessFrom, preprocessTo)
 			brain.setPerception(nextObservation,action,reward,terminal)
 	else:
 		while True:
@@ -58,26 +64,28 @@ def playAtari():
 			while not atari.ale.game_over():
 				action = brain.getActionTest()
 				nextObservation,reward,terminal = atari.next(action)
-				nextObservation = preprocess(nextObservation)
+				nextObservation = preprocess(nextObservation, preprocessFrom, preprocessTo)
 				brain.setPerceptionTest(nextObservation,action,reward,terminal)
 				total_reward += reward
+				if terminal:
+					print('Total Reward episode: ', total_reward)
 				#print(counter_actionssame)
-				action_curidx = getActionIdx(action)
-				if action_prev == action_curidx:
-					counter_actionssame = counter_actionssame + 1
-					if counter_actionssame == 100:
-						atari.ale.reset_game()
-				else:
-					counter_actionssame = 0
-				action_prev = action_curidx
-				counter_actionssame = counter_actionssame + 1
+				#action_curidx = getActionIdx(action)
+				#if action_prev == action_curidx:
+				#	counter_actionssame = counter_actionssame + 1
+				#	if counter_actionssame == 100:
+				#		atari.ale.reset_game()
+				#else:
+				#	counter_actionssame = 0
+				#action_prev = action_curidx
+				#counter_actionssame = counter_actionssame + 1
 				#if(counter_actionssame % 100 == 0):
 				#if(not terminal):
 				#	print('terminal')
 				#	atari.ale.reset_game()
 				#print(atari.ale.game_over())
-			print('Episode Ended with score: %d' %(total_reward))
-			atari.ale.reset_game()
+			#print('Episode Ended with score: %d' %(total_reward))
+			#atari.ale.reset_game()
 
 def getActionIdx(arr):
 	i = 0
