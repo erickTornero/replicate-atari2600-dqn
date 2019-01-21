@@ -13,5 +13,8 @@ class GameProperties:
         elif namegame == 'enduro':
             self.preprocessFrom = 0
             self.preprocessTo = 84
+        elif namegame == 'frostbite':
+            self.preprocessFrom = 16
+            self.preprocessTo = 100
     def GetLimits(self):
         return self.preprocessFrom, self.preprocessTo
