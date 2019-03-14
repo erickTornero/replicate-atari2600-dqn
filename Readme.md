@@ -6,8 +6,8 @@ Take as base the following repository from Marc Tuscher:
 
 Architecture of DRQN A layer of LSTM cells is added to a DQN architecture
 
-![DRQN](tex/DRQN.png)
+![DRQN](tex/images/DRQN.png)
 
 Architecture of DGRQN a layer of GRU Cells is added to the last layer of DQN
 
-![DGRQN](tex/DGQN.png)
+![DGRQN](tex/images/DGQN.png)
