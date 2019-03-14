@@ -68,7 +68,7 @@ Our experiments is build over Atari Learning Enviroment (ALE) \cite{b3} which se
 
 \section{Methods}
 
-Using three DQN architectures. A classic DQN is implemented (Figure \ref{dqn}). Pre-processing cuts the frames obtained from the environment to $160\times160$ image. Then, the image is sub-sampled at $84\times84$ and image is transformed to scale gray. Classic DQN architecture includes three convolutional layers and two fully-connect layers (Figure 1). Output layer size depends on the number of actions in the game. 
+Using three DQN architectures. A classic DQN is implemented (Figure \ref{dqn}). Pre-processing cuts the frames obtained from the environment to $160\times160$ image. Then, the image is sub-sampled at $84\times84$ and image is transformed to scale gray. Classic DQN architecture includes three convolutional layers and two fully-connect layers (Figure \ref{dqn}). Output layer size depends on the number of actions in the game. 
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{images/DQN.png}}
@@ -105,10 +105,8 @@ All the architectures have as parameters:
 
 \section{Results}
 
-We test the architecture in three diferent games, Enduro, Break-out and Frostbite with 10000000 (10 millions) of episodes.
+We test the architecture in three diferent games, Enduro, Break-out and Frostbite with 10000000 (10 millions) of episodes. The results with testing Enduro in Average Q Value and Average Reward, are shown in the Figures \ref{enduro-q} and \ref{enduro-r} respectively.
 
-Game Tested:
-Enduro
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{images/enduro-averQ-drqn-or-dgruqn-gr.png}}
 \caption{Average Q Value Enduro, Orange DRQN, Green Our method.}
@@ -121,7 +119,7 @@ Enduro
 \label{enduro-r}
 \end{figure}
 
-Breakout:
+The results with testing Breakout in Average Q Value and Average Reward, are shown in the Figures \ref{breakout-q} and \ref{breakout-r} respectively.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{images/breakout-avQ-drqb-bl-dgruqn-gr.png}}
@@ -134,6 +132,26 @@ Breakout:
 \caption{Average Reward Breakout, Blue DRQN, Green Our method.}
 \label{breakout-r}
 \end{figure}
+
+The results with testing Frostbite in Average Q Value and Average Reward, are shown in the Figures \ref{Frostbite-q} and \ref{Frostbite-r} respectively.
+
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{images/frostbite-avq-blure-drqn.png}}
+\caption{Average Q-value Frostbite, Blue DRQN, Green Our method.}
+\label{Frostbite-q}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{images/frostbite-av-rew-blue-dgruqn.png}}
+\caption{Average Reward Frostbite, Blue DRQN, Green Our method.}
+\label{Frostbite-r}
+\end{figure}
+
+
+
+
+
 
 \section{Conclusions}
 
