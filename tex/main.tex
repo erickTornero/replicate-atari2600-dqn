@@ -29,7 +29,7 @@ victor.flores@ucsp.edu.pe}
 \maketitle
 
 \begin{abstract}
-Since some applications in reinforcement learning require long term memory. Some architectures propose to add a recurrent layer with LSTM cells, the ability to remember more with these architectures is a consequence of the performance improvements shown in some Atari-2600 games such as Frostbite, where it is necessary to remember the way home after completing a certain score. This compared to a typical DQN. In the present paper we propose to use GRU cells which are easier to train, in the recurrent layer of a DRQN instead LSTM cells.
+Since some applications in reinforcement learning require long term memory. Some architectures propose to add a recurrent layer with LSTM cells, the ability to remember more with these architectures is a consequence of the performance improvements shown in some Atari-2600 games such as Frostbite, where it is necessary to remember the way home after completing a certain score, this compared to a typical DQN. In the present paper we propose to use GRU cells which are easier to train, in the recurrent layer of a DRQN instead LSTM cells.
 \end{abstract}
 
 
@@ -52,7 +52,7 @@ In the Q Learning algorithm, the Q value of a pair (state, action) contains the 
 
 
 
-LSTM is the first neural network architecture that introduces the concept of memory cell.
+LSTM is the first neural network architecture that introduces the concept of memory cell \cite{b5}.
 The memory cell can retain its value for a short or long period of time as a function of its inputs, which allows the cell to remember important information calculated in previous stages.
 The LSTM memory cell contains three gates that control how information flows inside or outside the cell. The gateway controls when new information can enter memory. The door of forgetfulness controls when a part of the information is forgotten, which allows the cell to remember new data. Finally, the exit door controls when the information that is contained in the cell is used in the result of the cell.
 
@@ -61,6 +61,8 @@ This model has two doors, omitting the exit door that is present in the LSTM mod
 The GRU includes two doors: an update door and a reset door. The update gate indicates how much of the contents of the previous cells must be maintained. The reset door defines how to incorporate the new entry with the previous contents of the cell.
 For many applications, the GRU has a performance similar to that of LSTM, but being simpler has less weighting and faster execution.
 The GRU is simpler than the LSTM, it can be trained more quickly and it can be more efficient in its execution. However, LSTM can store more information, which can provide better results.
+
+Our experiments is build over Atari Learning Enviroment (ALE) \cite{b3} which serve us as an evaluation platform for our algorithm and allow us to compare with DRQN proposed by Hausknecht et al. 2015 \cite{b2}.
 
 
 
@@ -96,6 +98,7 @@ All the architectures have as parameters:
 \item Learning rate method: RMSProp optimizer (learning rate 0.00025).
 \item $\epsilon=[1 .. 0.02]$ ($\epsilon$ decay in 1000000 episodes).
 \item Replay memory size: 800000.
+\item Discount factor $\gamma = 0.99$
 \end{itemize}
 
 
@@ -132,24 +135,18 @@ Breakout:
 \label{breakout-r}
 \end{figure}
 
-In Fig. \ref{enduro-q} and \ref{breakout-q} an small  improvement in the rising time, but in two cases our method the Q-values and the average reward is less than a tipical DRQN, this may be becouse an GRU is less robust than LSTM.
-
 \section{Conclusions}
 
-Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
-rather than symbols or abbreviations when writing Figure axis labels to 
-avoid confusing the reader. As an example, write the quantity 
-``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
-units in the label, present them within parentheses. Do not label axes only 
-with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
-\{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
-quantities and units. For example, write ``Temperature (K)'', not 
-``Temperature/K''.
+In Fig. \ref{enduro-q} and \ref{breakout-q} an small  improvement in the rising time, but in two cases our method the Q-values and the average reward is less than a tipical DRQN, this may be becouse an GRU is less robust than LSTM.
+
 
 
 \begin{thebibliography}{00}
 \bibitem{b1} V. Mnih, ``Playing Atari with Deep Reinforcement Learning``. In NIPS Deep Learning Workshop 2013.
 \bibitem{b2} M. Hausknecht and Peter Stone, ``Deep Recurrent Q-Learning for Partially Observable MDPs``. In AAAI Fall Symposium Series 2015.
+\bibitem{b3} M. Bellemare, Y. Naddaf, J. Veness and M. Bowling, ``The arcade learning enviroment. An evaluation platform for general agents``. In Journal of Artificial Intelligence Research, 47:253-279, 2013.
+\bibitem{b4} Richard Sutton and Andrew Barto. ``Reinforcement Learning: An Introduction``. MIT Press, 1998.
+\bibitem{b5} Hochreiter and Schmidhuber. ``Long short-term memory``. Neural Comput. 9(8):1735-1780.
 \end{thebibliography}
 
 
