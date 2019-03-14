@@ -11,7 +11,7 @@ class Config(object):
     history_len = 4
     frame_skip = 4
     epsilon_start = 1.0
-    epsilon_end = 0.02
+    epsilon_end = 0.05
     max_steps = 10000
     epsilon_decay_episodes = 1000000
     train_freq = 8
@@ -53,7 +53,7 @@ class GymConfig(Config):
     screen_height = 84
     screen_width = 84
     env_name = "Breakout-v0"
-    mem_size = 800000
+    mem_size = 1000000
 
 
 
